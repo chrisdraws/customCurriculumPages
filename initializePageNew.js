@@ -34,7 +34,7 @@ var curriculumDataObject = curriculumDataObject || {};
 			mainObject.pageType = variable1;
 			mainObject.opcoName = variable2;
 
-			if (document.location.hostname === "localhost") {
+			if (document.location.hostname === "localhost" || document.location.href.indexOf("_Projects/_eLearning") !== -1) {
 				mainObject.resourceLocation = "../../";
 			} else {
 				mainObject.resourceLocation = "https://tek-professional-development.com/cornerstoneResources/storage/";
@@ -160,6 +160,10 @@ var curriculumDataObject = curriculumDataObject || {};
 				makePageDomNew(initialObject);
 				return newDomInitial;
 			},
+			buildGoogleCode: function buildGoogleCode(title, areaObjectName, mainObjectCategory, mainObjectPageType) {
+
+				return 'onclick=" if(ga !== \'\' ) { ga(\'send\', \'event\', \'click - ' + mainObjectCategory + ' - ' + mainObjectPageType + '\', \'' + areaObjectName + ' Clicked\', \'' + title + '\', 5, true); } "';
+			},
 			pageFrame: {
 				// this is the framework of the page, these are all the classes for the divs
 
@@ -202,7 +206,17 @@ var curriculumDataObject = curriculumDataObject || {};
 					var titleBannerObject = this,
 					    mainObject = mainObject,
 					    blockObject = mainObject.blocks,
-					    newPageContent = '<div class=\'titleHolder\'>\n\t\t\t\t\t\t\t\t\t<h2>Applications World</h2>\n\t\t\t\t\t\t\t\t\t<h4>Applications are a world of \u201CFun.\u201D  Dig in below!</h4>\n</div>';
+					    titleInfo = titleBannerObject.data.pages[mainObject.category],
+					    newPageContent = '<div class=\'titleHolder ' + mainObject.category + '\'>';
+
+					if (titleInfo.imgSrc) {
+						newPageContent += '<img src="' + mainObject.resourceLocation + titleInfo.imgSrc + '" /> ';
+					} else {
+						newPageContent += '<h2>' + titleInfo.title + '</h2>\n\t\t\t\t\t\t\t\t\t\t\t<h4>' + titleInfo.subTitle + '</h4>';
+					}
+
+					newPageContent += '</div>';
+
 					newPageContent = blockObject.makePageDomNew(newPageContent);
 					mainObject.grabLocationDom(titleBannerObject.location).appendChild(newPageContent);
 				},
@@ -236,7 +250,7 @@ var curriculumDataObject = curriculumDataObject || {};
 							carouselContent += ' active';
 						}
 
-						carouselContent += '">\n\t\t\t\t\t\t\t\t\t  <a target="_blank" href="' + slide.link + '">';
+						carouselContent += '">\n\t\t\t\t\t\t\t\t\t  <a target="_blank" class="submittedResource ' + slide.type + '" href="' + slide.link + '"  ' + blockObject.buildGoogleCode(slide.title, carouselObject.name, mainObject.category, mainObject.pageType) + '>';
 
 						var imgSrc = "";
 						if (slide.imgSrc !== "") {
@@ -270,7 +284,7 @@ var curriculumDataObject = curriculumDataObject || {};
 					// build list items
 					features.forEach(function (feature, index) {
 						var imgSrc = "img/categoryPage/comingSoon.png";
-						newPageContent += '<li class="resourceItem">\n\t\t\t\t\t\t\t\t\t\t\t<a target="_blank" href=\'' + feature.link + '\'>\n\t\t\t\t\t\t\t\t\t\t\t\t<div class="thumbnailImage">';
+						newPageContent += '<li class="resourceItem">\n\t\t\t\t\t\t\t\t\t\t\t<a target="_blank" class=\'submittedResource ' + feature.type + '\' href=\'' + feature.link + '\'  ' + blockObject.buildGoogleCode(feature.title, featuredObject.name, mainObject.category, mainObject.pageType) + '>\n\t\t\t\t\t\t\t\t\t\t\t\t<div class="thumbnailImage">';
 						if (feature.imgSrc !== "") {
 							imgSrc = feature.imgSrc;
 						}
@@ -288,20 +302,40 @@ var curriculumDataObject = curriculumDataObject || {};
 					var suggestion = featuredObject.data.pages[mainObject.category].suggestion;
 
 					newPageContent += '<div class="suggestion">\n\t\t\t\t\t\t\t\t\t<ul class=\'nav nav-tabs\'>\n\t\t\t\t\t\t\t\t\t\t \n\t\t\t\t\t\t\t\t\t\t<li class="dropdown ">\n\t\t\t\t\t\t\t\t\t\t\t<a class="dropdown-toggle" data-toggle="dropdown" href="#">' + suggestion.header + '\n\t\t\t\t\t\t\t\t\t\t\t<span class="caret"></span></a>\n\t\t\t\t\t\t\t\t\t\t\t<ul class="dropdown-menu">\n\t\t\t\t\t\t\t\t\t\t\t  <li class="header">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class="title">' + suggestion.title + ' </span>\n\t\t\t\t\t\t\t\t\t\t\t\t<span class="description">' + suggestion.message + '</span>\n\t\t\t\t\t\t\t\t\t\t\t  </li>';
-					var suggestionEmails = suggestion.emails;
 
-					suggestionEmails.forEach(function (email, index) {
+					var randomEmail = suggestion.emails[Math.floor(Math.random() * suggestion.emails.length)];
 
-						newPageContent += '<li><a href="mailto:' + email + '">' + email + '</a></li>';
-					});
+					newPageContent += '<li><a href="mailto:' + randomEmail.email + '?cc=skuehn@teksystems.com&subject=APPademics Submission Request&body=Hello,%0A %0A Web address or attachment: %0A %0A Why is this important: %0A %0A What is the target category:%0A %0A %0A %0A"   ' + blockObject.buildGoogleCode(randomEmail.name + " Recipeient", "Content Curator Email ", mainObject.category, mainObject.pageType) + '>' + randomEmail.name + '</a></li>';
 
 					newPageContent += '</ul>\n\t\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t</div>';
 
 					newPageContent = blockObject.makePageDomNew(newPageContent);
 
 					mainObject.grabLocationDom(featuredObject.location).appendChild(newPageContent);
+					// this will add in the suggestion block
+					//blockObject.suggestion.initialize(mainObject);
 				},
 				data: {}
+			},
+			suggestion: {
+				location: "",
+				initialize: function initialize(mainObject) {
+
+					var suggestionObject = this,
+					    mainObject = mainObject,
+					    blockObject = mainObject.blocks,
+					    suggestionData = mainObject.blocks.featured.data.pages[mainObject.category].suggestion;
+
+					var newPageContent = '<div class="suggestion">\n\t\t\t\t\t\t\t\t\t<ul class=\'nav nav-tabs\'>\n\t\t\t\t\t\t\t\t\t\t \n\t\t\t\t\t\t\t\t\t\t<li class="dropdown ">\n\t\t\t\t\t\t\t\t\t\t\t<a class="dropdown-toggle" data-toggle="dropdown" href="#">' + suggestion.header + '\n\t\t\t\t\t\t\t\t\t\t\t<span class="caret"></span></a>\n\t\t\t\t\t\t\t\t\t\t\t<ul class="dropdown-menu">\n\t\t\t\t\t\t\t\t\t\t\t  <li class="header">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class="title">' + suggestion.title + ' </span>\n\t\t\t\t\t\t\t\t\t\t\t\t<span class="description">' + suggestion.message + '</span>\n\t\t\t\t\t\t\t\t\t\t\t  </li>';
+
+					var randomEmail = suggestion.emails[Math.floor(Math.random() * suggestionEmails.length)];
+
+					newPageContent += '<li><a href="mailto:' + randomEmail.email + '?cc=skuehn@teksystems.com" ' + blockObject.buildGoogleCode(randomEmail.name + " Recipeient", "Content Curator Email ", mainObject.category, mainObject.pageType) + '>' + randomEmail.name + '</a></li>';
+
+					newPageContent += '</ul>\n\t\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t</div>';
+
+					mainObject.grabLocationDom(featuredObject.location).appendChild(newPageContent);
+				}
 			},
 			browseContent: {
 				location: ".browseContent",
@@ -328,13 +362,13 @@ var curriculumDataObject = curriculumDataObject || {};
 
 							category.subCategories.forEach(function (subCategory, index2) {
 
-								menuContent += '<li class="dropdown ' + category.shortName;
+								menuContent += '<li class=\'dropdown ' + category.shortName;
 
 								if (index === 0) {
 									menuContent += ' active';
 								}
 
-								menuContent += '">\n\t\t\t\t\t\t\t\t\t\t\t\t<a class="dropdown-toggle" data-toggle="dropdown" href="#">' + category.title + '\n\t\t\t\t\t\t\t\t\t\t\t\t<span class="caret"></span></a>\n\t\t\t\t\t\t\t\t\t\t\t\t<ul class="dropdown-menu">\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class="' + subCategory.shortName + '"><a href="#">' + subCategory.title + ' </a></li>\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class="' + subCategory.shortName + '"><a href="#">' + subCategory.title + ' </a></li>\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class="' + subCategory.shortName + '"><a href="#">' + subCategory.title + ' </a></li> \n\t\t\t\t\t\t\t\t\t\t\t\t</ul>';
+								menuContent += '\'>\n\t\t\t\t\t\t\t\t\t\t\t\t<a class=\'dropdown-toggle\' data-toggle=\'dropdown\' href=\'#\'>' + category.title + '\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\'caret\'></span></a>\n\t\t\t\t\t\t\t\t\t\t\t\t<ul class=\'dropdown-menu\'>\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class=\'' + subCategory.shortName + '\'><a href=\'#\'>' + subCategory.title + ' </a></li>\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class=\'' + subCategory.shortName + '\'><a href=\'#\'>' + subCategory.title + ' </a></li>\n\t\t\t\t\t\t\t\t\t\t\t\t  <li class=\'' + subCategory.shortName + '\'><a href=\'#\'>' + subCategory.title + ' </a></li> \n\t\t\t\t\t\t\t\t\t\t\t\t</ul>';
 							});
 						} else {
 							// no submenu
@@ -348,7 +382,7 @@ var curriculumDataObject = curriculumDataObject || {};
 						if (category.resources) {
 							category.resources.forEach(function (resource, index) {
 
-								browseContent += '<div class=\'resource\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<a href=""><!-- NOTE need to add title:after for "..." -->\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class="thumbnail">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class="thumbnailImage">';
+								browseContent += '<div class=\'resource\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<a href=\'' + resource.link + '\' class=\'submittedResource ' + resource.type + '\' target=\'_blank\' ' + blockObject.buildGoogleCode(resource.title, browseContentObject.name, mainObject.category, mainObject.pageType) + '><!-- NOTE need to add title:after for "..." -->\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'thumbnail\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'thumbnailImage\'>';
 								var imgSrc = "img/categoryPage/comingSoon.png";
 								if (resource.imgSrc !== "") {
 									imgSrc = resource.imgSrc;
@@ -385,7 +419,8 @@ var curriculumDataObject = curriculumDataObject || {};
      		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Category 5
      		<span class="caret"></span></a>
      		<ul class="dropdown-menu">
-     		  <li><a href="#">Sub Topic </a></li>
+     
+     				  <li><a href="#">Sub Topic </a></li>
      		  <li><a href="#">Sub Topic </a></li>
      		  <li><a href="#">Sub Topic </a></li> 
      		</ul>
@@ -512,15 +547,12 @@ var curriculumDataObject = curriculumDataObject || {};
 
 								pageContent += '</div>';
 
-								if (section.name === "rec1" && module.title === "Module 1:") {
-									pageContent += '<!-- FIX!! need to build this in --><div class=\'divisionalMod additionalMod col-md-12 col-sm-12\'>              <h4>Get to know your division</h4>              <div class=\'subModule col-md-12 col-sm-12\'>                <div class=\'description col-md-12 col-sm-12\'>                  <p>To learn more about selling and recruiting your divisionally aligned product line, watch a short clip from our division leaders who will explain where the division is heading in the future, discuss the importance behind skill-set alignment, and their expectations of what it takes to be a successful recruiter in the division. </p>                  <p>Also, print the participant guide and complete the exercises with your divisionally aligned Account Manager.</p>                </div>                <div class=\'col-md-12 col-sm-12\'>                  <div class=\'singleColumn col-md-3 col-sm-3\'>                    <h4>Telecommunications</h4>                    <div class=\'description\'>                      <p></p>                    </div>                    <div class=\'resourcesHolder col-md-12 col-sm-12\' >                      <ul >                        <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5157298612001\'>Tim Siebes - Welcome</a> </li>                        <li class=\'pdf\' > <a href=\'https://tek-professional-development.com/cornerstoneResources/storage/documents/teksystems/recruiter/Telecom Participant Guide.pdf\' class=\'dontUseShadowBox\' target=\'_blank\'>Telecom Participant Guide</a> </li>                        <li style=\'margin-bottom: 19px;\' class=\'link\' > <a href=\'https://allegiscloud.sharepoint.com/sites/TEKLoop/divisionsandservices/divisions/Pages/Telecom.aspx\'  class=\'dontUseShadowBox\' target=\'_blank\'>Loop - Learn more about Telecom</a> </li>                      </ul>                    </div>                  </div>                  <div class=\'singleColumn col-md-3 col-sm-3\'>                    <h4>End User Services</h4>                    <div class=\'description\'>                      <p></p>                    </div>                    <div class=\'resourcesHolder col-md-12 col-sm-12\' >                      <ul style=\' padding: 0px;\'>                        <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5157241047001\'>Brian Van Wyhe - Welcome</a> </li>                        <li class=\'pdf\' ><a href=\'https://tek-professional-development.com/cornerstoneResources/storage/documents/teksystems/recruiter/End User Services Participant Guide.pdf\' class=\'dontUseShadowBox\' target=\'_blank\' >EUS Participant Guide</a></li>                        <li style=\'margin-bottom: 19px;\' class=\'link\' > <a href=\'https://allegiscloud.sharepoint.com/sites/TEKLoop/divisionsandservices/divisions/Pages/EndUserSupport.aspx\' class=\'dontUseShadowBox\' target=\'_blank\'>Loop - Learn more about EUS</a> </li>                      </ul>                    </div>                  </div>                  <div class=\'singleColumn col-md-3 col-sm-3\'>                    <h4>Network Infrastructure Services</h4>                    <div class=\'description\'>                      <p>Please complete the assigned training on your Transcript</p>                    </div>                    <div class=\'resourcesHolder col-md-12 col-sm-12\' >                      <ul style=\'padding: 0px;\'>                        <li class=\'transcript\' ><a href=\'/LMS/UserTranscript/MainView.aspx?Reset=TRUE&tab_page_id=-8\'  class=\'dontUseShadowBox\' target=\'_blank\' >Access Transcript</a></li>                        <li class=\'link\' > <a href=\'https://allegiscloud.sharepoint.com/sites/TEKLoop/divisionsandservices/divisions/Pages/Network.aspx\' class=\'dontUseShadowBox\' target=\'_blank\'>Loop - Learn more about NIS</a> </li>                      </ul>                    </div>                  </div>                  <div class=\'singleColumn col-md-3 col-sm-3\'>                    <h4>Applications</h4>                    <div class=\'description\'>                      <p></p>                    </div>                    <div class=\'resourcesHolder col-md-12 col-sm-12\' >                      <ul style=\' padding: 0px;\'>                        <li class=\'video\' ><a href=\'\' class=\'useShadowBox 5157241053001\'>Dave Spires - Welcome</a></li>                        <li class=\'pdf\' ><a href=\'https://tek-professional-development.com/cornerstoneResources/storage/documents/teksystems/recruiter/Applications Participant Guide.pdf\' class=\'dontUseShadowBox\' target=\'_blank\'>Applications Participant Guide</a></li>                        <li style=\'margin-bottom: 19px;\' class=\'link\' > <a href=\'https://allegiscloud.sharepoint.com/sites/TEKLoop/divisionsandservices/divisions/Pages/Applications.aspx\' class=\'dontUseShadowBox\' target=\'_blank\'>Loop - Learn more about Applications</a> </li>                      </ul>                    </div>                  </div>                  <div class=\'clear\'></div>                </div>              </div>            </div><!-- FIX!! need to build this in -->';
-								}
 								if (module.additionalModules) {
 									module.additionalModules.forEach(function (additionalMod) {
 
 										var additionalModule = additionalMod;
 
-										pageContent += '<div style=\'display: none;\' class=\'divisionalMod additionalMod col-md-12 col-sm-12\'>\t\t\t\t\t\t\t\t\t\t\t\t<h4>' + additionalModule.title + '</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'subModule col-md-12 col-sm-12\'>';
+										pageContent += '<div class=\'divisionalMod additionalMod col-md-12 col-sm-12\'>\t\t\t\t\t\t\t\t\t\t\t\t<h4>' + additionalModule.title + '</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'subModule col-md-12 col-sm-12\'>';
 
 										if (additionalModule.description) {
 											pageContent += '<div class=\'description col-md-12 col-sm-12\'>';
@@ -569,7 +601,7 @@ var curriculumDataObject = curriculumDataObject || {};
 
 														var audience = "";
 														if (group.audience) {
-															audience = section.audience;
+															audience = group.audience;
 														}
 														var passedResources = {
 															"resource": resource,
@@ -586,13 +618,38 @@ var curriculumDataObject = curriculumDataObject || {};
 												pageContent += '</div>';
 											});
 										}
+										console.log(additionalModule);
+										if (additionalModule.singleContent) {
+											console.log("here singleContent");
+											var singleContent = additionalModule.singleContent;
+
+											pageContent += '<div class=\'resourcesHolder\' >';
+
+											if (singleContent.resources) {
+
+												pageContent += '<ul class=\'resourcesList doubleColumn\'>';
+
+												singleContent.resources.forEach(function (resource) {
+
+													var audience = "";
+													if (singleContent.resources.audience) {
+														audience = singleContent.resources.audience;
+													}
+													var passedResources = {
+														"resource": resource,
+														"mainObject": mainObject,
+														"audience": audience
+													};
+
+													pageContent += blockObject.resourceCreator(passedResources);
+												});
+											}
+
+											pageContent += '</div>';
+										}
 
 										pageContent += '<div class=\'clear\'></div></div></div></div>';
 									});
-								}
-
-								if (section.name === "rec1" && module.title === "Module 4:") {
-									pageContent += '<!-- FIX!! need to build this in --><div class=\'linkedinMod additionalMod col-md-12 col-sm-12\'>              <h4>LinkedIn Recruiter Professional Services (RPS)</h4>              <div class=\'subModule col-md-12 col-sm-12\'>                <div class=\'description col-md-12 col-sm-12\'>                  <p>Welcome to the LinkedIn Onboarding Curriculum. These videos and activities are meant to provide a brief tour of your LinkedIn RPS premium account, otherwise known as Recruiter Professional services.  </p>                  <p>Complete the activities in the participant guide and watch the videos to learn how you can leverage LinkedIn RPS to effectively prepare for your calls and provide value when speaking with consultants.</p>                </div>                <div class=\'col-md-12 col-sm-12\'>                  <div class=\'resourcesHolder\' >                      <ul class=\'resourcesList doubleColumn\'>                                                <li class=\'pdf\' > <a href=\'https://tek-professional-development.com/cornerstoneResources/storage/documents/teksystems/recruiter/LinkedIn Participant Guide.pdf\' class=\'dontUseShadowBox\' target=\'_blank\'>LinkedIn Onboarding Participant Guide</a> </li><li class=\'video\' > <a href=\'\' class=\'useShadowBox 5330031409001\'>Introduction</a> </li>  <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5330018211001\'>Building a Profile</a> </li> <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5330017210001\'> Explore LinkedIn Recruiter </a> </li> <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5330031401001\'> Explore LinkedIn Recruiter 2 </a> </li>    <li class=\'video\' > <a href=\'\' class=\'useShadowBox 5330004379001\'>How to run advanced search </a> </li>                           </ul>                    </div>                  </div>                                   </div>                                   </div>  <!-- FIX!! need to build this in -->';
 								}
 
 								pageContent += '</div>';
@@ -602,14 +659,14 @@ var curriculumDataObject = curriculumDataObject || {};
 
 							//-- START --  this is to specifically build out an alphabetical selection option in the top module to allow the page to scroll to that section.  to use the function mainObject.scrollToElement this functionality should be setup in the mainObject.activatePage
 							var arrayOfAlpha = {};
-							pageContent += '<div style=\'display: none;\' class=\'module alphabeticalSelection\'><h5>';
+							pageContent += '<div style=\'display: block;\' class=\'module alphabeticalSelection\'><h5>';
 
 							var audience = "";
 							if (section.audience) {
 								audience = section.audience;
 							}
 
-							pageData.sharedModules.forEach(function (module) {
+							pageData.sharedModules.forEach(function (module, index) {
 								console.log(audience);
 								console.log(module.audiences);
 								console.log(module.audiences.indexOf(audience));
@@ -619,11 +676,15 @@ var curriculumDataObject = curriculumDataObject || {};
 
 									if (!arrayOfAlpha[title.charAt(0)]) {
 										arrayOfAlpha[title.charAt(0)] = title;
-										pageContent += ' - <span rel=\'' + title.replace(/ /g, '_') + '\'>' + title.charAt(0) + '</span>';
+
+										if (index !== 0) {
+											pageContent += ' - ';
+										} else {}
+										pageContent += '<span rel=\'' + title.replace(/ /g, '_').replace(/&amp;/g, "_") + '\'>' + title.charAt(0) + '</span>';
 									}
 								}
 							});
-							pageContent += ' - </h5>\';\n\t\t\t\t\t\t\t\t\t\t\t</div>';
+							pageContent += '</h5>\n\t\t\t\t\t\t\t\t\t\t\t</div>';
 
 							// -- END
 
@@ -636,7 +697,7 @@ var curriculumDataObject = curriculumDataObject || {};
 										curriculumIntro = "curriculumIntro";
 									}
 
-									pageContent += '<div class=\'module ' + curriculumIntro + '\'>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'title\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4>' + module.title + '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span>' + module.subTitle + '</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'moduleInfo\'>';
+									pageContent += '<div class=\'module ' + curriculumIntro + ' ' + module.title.replace(/ /g, '_').replace(/&amp;/g, "_") + '\'>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'title\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4>' + module.title + '\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span>' + module.subTitle + '</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'moduleInfo\'>';
 
 									pageContent += blockObject.processSubModules(module.subModules, blockObject, audience);
 
@@ -881,7 +942,7 @@ var curriculumDataObject = curriculumDataObject || {};
 						    pageContent = '<div class=\'holder infoBox ' + mainObject.category + '\'>\n\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'title\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\'pageTitle\'>Career Planning</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t<div class=\'infoBody\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p>Leverage this section to learn more about different career options that may be a good fit for you.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h5>Career Paths</h5>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p>View different career paths employees in our company have taken. Career paths are updated quarterly and feature one employee from each region, SS&O and Corporate.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a target=\'_blank\' href=\'http://allegislearning.allegisgroup.com/aerotek/career_path/index.html\'><span class=\'glyphicon glyphicon-arrow-right\'></span>Career Path Page</a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h5>Job Descriptions</h5>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p>Access a list of Aerotek job descriptions.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a target=\'_blank\' href=\'https://allegiscloud.sharepoint.com/sites/aeronet/mylifeandcareer/hr/Pages/JobDescriptions.aspx\'><span class=\'glyphicon glyphicon-arrow-right\'></span>Job Descriptions</a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h5>Current Allegis Career Opportunities</h5>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p>Click to access a list of current job openings within Allegis Group.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a target=\'_blank\' href=\'https://allegiscloud.sharepoint.com/sites/aeronet/mylifeandcareer/jobs/Pages/default.aspx?Company\'><span class=\'glyphicon glyphicon-arrow-right\'></span>Allegis Career Opportunities</a>';
 
 						if (mainObject.category === "careerDevelopment") {
-							pageContent += '<h5>Corporate Refresher</h5>\n\t\t\t\t\t\t\t\t\t\t\t<p>Whether you are tenured in your role or just want to sharpen your knowledge, click here for a corporate refresher course.</p>\n\t\t\t\t\t\t\t\t\t\t\t<a target=\'_blank\' href=\'https://sts.allegisedge.net/adfs/ls/IDPInitiatedSignOn.aspx?RelayState=RPID%3Dhttps%253A%252F%252Fallegisgroup.csod.com%26RelayState=%252fDeepLink%252fProcessRedirect.aspx%253fmodule%253dlodetails%2526lo%253ddfbb8fa7-94b3-4469-92ed-6b5cfc7c2ad9\'><span class=\'glyphicon glyphicon-arrow-right\'></span>Corporate Refresher Course</a>';
+							pageContent += '<h5>Corporate Refresher</h5>\n\t\t\t\t\t\t\t\t\t\t\t<p>Whether you are tenured in your role or just want to sharpen your knowledge, click here for a corporate refresher course.</p>\n\t\t\t\t\t\t\t\t\t\t\t<a target=\'_blank\' href=\'https://myapps.microsoft.com/signin/Cornerstone/9e7052a4d923460b9ce2f75182f33445?RelayState=%252fDeepLink%252fProcessRedirect.aspx%253fmodule%253dlodetails%2526lo%253d976fabe3-7ce8-4020-b701-79142883725f\'><span class=\'glyphicon glyphicon-arrow-right\'></span>Corporate Refresher Course</a>';
 						}
 						pageContent += '</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>';
 
@@ -943,7 +1004,7 @@ var curriculumDataObject = curriculumDataObject || {};
 							pageContent += '<ul class=\'socialMedia\'>';
 							objectData.socialMediaIcons.icons.forEach(function (socialMedia) {
 
-								pageContent += '<li class=\'icon ' + socialMedia.name + '\'>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a title=\'' + socialMedia.title + '\' href=\'' + socialMedia.linkTarget + '\' target=\'_blank\'></a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</li>';
+								pageContent += '<li class=\'icon ' + socialMedia.name + '\'>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a title=\'' + socialMedia.title + '\' href=\'' + socialMedia.linkTarget + '\' target=\'_blank\'></a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</li>';
 							});
 							pageContent += '</ul>';
 						}
@@ -1003,6 +1064,7 @@ var curriculumDataObject = curriculumDataObject || {};
 			}
 		},
 		activatePage: function activatePage() {
+			// NOTE -- all parts of this that address specific areas of the page or "blocks" should be broken up and added as an additional function that is called by each blocks initialize function, so that the functionallity for a block is tied to that block. 
 			var mainObject = this;
 			var pageCurriculum = document.querySelector(".curriculum"),
 			    isThisDevelopment = false;
@@ -1074,7 +1136,7 @@ var curriculumDataObject = curriculumDataObject || {};
 					    buttonClass = button.getAttribute("class");
 
 					//console.log(buttonClass);
-					if (isThisDevelopment && button.classList.contains("acad4")) {
+					if (isThisDevelopment && button.classList.contains("acad5")) {
 
 						button.parentElement.classList.toggle("notActive");
 					}
@@ -1147,22 +1209,12 @@ var curriculumDataObject = curriculumDataObject || {};
 				});
 			}
 
-			// NOTE IE has troulbe with forEach after using querySelectorAll
-			function convertToArray(submittedDomObject) {
-				var newArray = [];
-				for (i = 0; i < submittedDomObject.length; i++) {
-					newArray[i] = submittedDomObject[i];
-				}
-
-				return newArray;
-			}
-
 			//NOTE -- research further: this works on the categories page and for some reason doesn't work on the curriculumpage. The styling in the right column is causing some kind of conflict so the scrolling does nto work correctly in chrome or IE.  This is the preferred and simpler method of adding scrollbars
 			function addSimpleScrollbars(target) {
 				if (document.querySelectorAll(target)) {
 					var targets = document.querySelectorAll(target);
 
-					targets = convertToArray(targets);
+					targets = mainObject.convertToArray(targets);
 
 					targets.forEach(function (targetItem) {
 						new SimpleBar(targetItem, { autoHide: false });
@@ -1176,6 +1228,7 @@ var curriculumDataObject = curriculumDataObject || {};
 					functionToUse: addScrollBars,
 					areas: [".announcements .infoBody .announcementList", ".resources .resourcesList.rec", ".grayHolder ul", ".externalResources .holder .infoBody"]
 				},
+
 				categoryPage: {
 					functionToUse: addSimpleScrollbars,
 					areas: [".featuredList .list"]
@@ -1183,18 +1236,16 @@ var curriculumDataObject = curriculumDataObject || {};
 			};
 			areasToAddScrolling[mainObject.pageType].areas.forEach(areasToAddScrolling[mainObject.pageType].functionToUse);
 
-			// this specifically adds functionality to the browse categories section of the category type page
-
-
+			// this specifically adds functionality to the browse categories section of the category type page		
 			if (document.querySelectorAll(".browseContent")[0]) {
 
 				var browseContent = document.querySelectorAll(".browseContent")[0],
 				    browseButtons = browseContent.querySelectorAll(".nav.nav-tabs li a"),
 				    categories = browseContent.querySelectorAll(".categoriesHolder .category");
 
-				browseContent = convertToArray(browseContent);
-				browseButtons = convertToArray(browseButtons);
-				categories = convertToArray(categories);
+				browseContent = mainObject.convertToArray(browseContent);
+				browseButtons = mainObject.convertToArray(browseButtons);
+				categories = mainObject.convertToArray(categories);
 
 				browseButtons.forEach(function (button) {
 					button.addEventListener("click", function (event) {
@@ -1215,10 +1266,73 @@ var curriculumDataObject = curriculumDataObject || {};
 				});
 			}
 
+			// NOTE -- this targets all submitted resources on the category type pages
+			var submittedResources = document.querySelectorAll(".submittedResource");
+			if (submittedResources[0]) {
+				var targets = mainObject.convertToArray(submittedResources);
+				targets.forEach(function (target) {
+					if (target.classList.contains("infographic")) {
+						if (target.href.indexOf(".jpg") === -1 && target.href.indexOf(".gif") === -1 && target.href.indexOf(".png") === -1) {} else {
+							var src = target.href;
+							target.addEventListener("click", function (e) {
+								e.preventDefault();
+								e.stopPropagation();
+								var win = window.open("", "Title", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=" + screen.width + ", height=" + screen.height + ", top=" + (screen.height - 400) + ", left=" + (screen.width - 840));
+								win.document.body.innerHTML = '<img src="' + src + '"/>';
+							});
+						}
+					}
+				});
+			}
+
+			// This adds a navigator into the teksystems FSG Page that will scroll to the corresponding alphabetical area of the modules listed below.
+
+			//mainObject.scrollToElement 
+
+			var alphabeticalSelection = document.querySelectorAll(".module.alphabeticalSelection");
+			console.log("here alphaBlock");
+			if (alphabeticalSelection[0]) {
+
+				var alphaBlocks = mainObject.convertToArray(alphabeticalSelection);
+
+				alphaBlocks.forEach(function (alphaBlock) {
+
+					//console.log(alphaBlock.parentElement);
+					selectionElements = mainObject.convertToArray(alphaBlock.querySelectorAll('span'));
+
+					selectionElements.forEach(function (element) {
+
+						element.addEventListener("click", function (e) {
+							console.log("here");
+							e.stopPropagation();
+							mainObject.scrollToElement(alphaBlock.parentElement.querySelector("." + element.getAttribute('rel')));
+						});
+					});
+				}
+
+				//mainObject.convertToArray(alphabeticalSelection[0].querySelectorAll('span')); 
+				//				
+				//				
+				//					targets.forEach(function(target) {
+				//
+				//						target.addEventListener("click",function(e){
+				//
+				//							var clicked = e.target;
+				//
+				//
+				//
+				//						});
+				//
+				//					})
+
+				);
+			}
+
 			/*if(document.querySelector(".featuredList .list")){
    	new SimpleBar(document.querySelector(".featuredList .list"),{autoHide:false});
    }*/
 			//jquery is required for this
+			//Shadowbox is used on the curriculum type page to load brigthcove videos into a shadowbox
 			Shadowbox.init({
 
 				onClose: function onClose() {
@@ -1382,6 +1496,16 @@ var curriculumDataObject = curriculumDataObject || {};
 				});
 			})();
 		},
+
+		convertToArray: function convertToArray(submittedDomObject) {
+			// this function is useful when dealing with a querySelectAll and the dom elements need to be converted into an array from their standard form because IE does not like them. . . 	
+			var newArray = [];
+			for (i = 0; i < submittedDomObject.length; i++) {
+				newArray[i] = submittedDomObject[i];
+			}
+
+			return newArray;
+		},
 		scrollToElement: function scrollToElement(pageElement) {
 			//pageElement === a DOM element.
 			var positionX = 0,
@@ -1503,6 +1627,7 @@ var curriculumDataObject = curriculumDataObject || {};
 							if (defaultsObject.blocksToUse.indexOf(dataObject) !== -1) {
 								if (mainObject.blocks[dataObject]) {
 									mainObject.blocks[dataObject].data = defaultsObject.blockData[dataObject].data;
+									mainObject.blocks[dataObject].name = dataObject;
 								}
 							}
 						}
@@ -1512,6 +1637,7 @@ var curriculumDataObject = curriculumDataObject || {};
 				passedFunction();
 			});
 		},
+
 		initializePage: function initializePage(defaultsObject) {
 
 			var mainObject = this;
@@ -1545,7 +1671,7 @@ var curriculumDataObject = curriculumDataObject || {};
 				console.log("pageType is blank");
 				mainObject.blocks.mainObject = mainObject;
 
-				if (document.location.hostname === "localhost") {
+				if (document.location.hostname === "localhost" || document.location.href.indexOf("_Projects/_eLearning") !== -1) {
 					mainObject.resourceLocation = "../../";
 				} else {
 					mainObject.resourceLocation = "https://tek-professional-development.com/cornerstoneResources/storage/";
