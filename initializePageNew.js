@@ -1,3 +1,5 @@
+/* this copy is old */
+
 var curriculumDataObject = curriculumDataObject || {};
 (curriculumPageHolderObject = function curriculumPageHolderObject(passedObject) {
 	var innerObject = {
@@ -409,7 +411,7 @@ var curriculumDataObject = curriculumDataObject || {};
      		<ul class="dropdown-menu">
      		  <li><a href="#">Sub Topic </a></li>
      		  <li><a href="#">Sub Topic </a></li>
-     		  <li><a href="#">Sub Topic </a></li> 
+     		  <li><a href="#">Sub Topic </a></li>
      		</ul>
      	</li> -->
      	<li><a href="#">Life cycle of an Application</a></li>
@@ -422,7 +424,7 @@ var curriculumDataObject = curriculumDataObject || {};
      
      				  <li><a href="#">Sub Topic </a></li>
      		  <li><a href="#">Sub Topic </a></li>
-     		  <li><a href="#">Sub Topic </a></li> 
+     		  <li><a href="#">Sub Topic </a></li>
      		</ul>
      	</li> -->
      	<li><a href="#">Customer Impact</a></li>
@@ -433,7 +435,7 @@ var curriculumDataObject = curriculumDataObject || {};
      		<ul class="dropdown-menu">
      		  <li><a href="#">Sub Topic </a></li>
      		  <li><a href="#">Sub Topic </a></li>
-     		  <li><a href="#">Sub Topic </a></li> 
+     		  <li><a href="#">Sub Topic </a></li>
      		</ul>
      	</li> -->
      	<li><a href="#">How to Message</a></li> */
