@@ -1,4 +1,34 @@
-var curriculumDataObject = curriculumDataObject || {};
+var curriculumD{ataObject = curriculumDataObject || {};
+
+var pageCreator  = (function(){
+	'use strict';
+
+	function constants(){
+		var key = arguments[0],
+			val = arguments[1];
+	}
+
+	function routes(){
+		var key = arguments[0],
+			val = arguments[1];
+	}
+	function controller(){
+		var key = arguments[0],
+			val = arguments[1];
+	}
+	function factory(){
+		var key = arguments[0],
+			val = arguments[1];
+	}
+
+	return {
+		'factory': factory,
+		'routes': routes,
+		'controller': controller,
+		'constants': constans
+
+	}
+})
 (curriculumPageHolderObject = function curriculumPageHolderObject(passedObject) {
 	var innerObject = {
 		promiseScript: "js/libs/promise/es6-promise.auto.js",
@@ -28,21 +58,21 @@ var curriculumDataObject = curriculumDataObject || {};
 		},
 		getInfo: function(variable1,variable2,variable3) { // new way to start page
 			var mainObject = this;
-			
+
 			mainObject.category = variable3;
 			mainObject.pageType = variable1;
 			mainObject.opcoName = variable2;
-			
-			
-			
+
+
+
 			if (document.location.hostname === "localhost" || document.location.href.indexOf("_Projects/_eLearning") !== -1)  {
 				mainObject.resourceLocation = "../../";
 			} else {
 				mainObject.resourceLocation = "https://tek-professional-development.com/cornerstoneResources/storage/";
 			}
-			
+
 			mainObject.processDefaultsNew(mainObject, function() {
-			
+
 				// FIX - this is also in the initialize() function
 
 				mainObject.blocks.mainObject = mainObject;
@@ -85,9 +115,9 @@ var curriculumDataObject = curriculumDataObject || {};
 				}
 
 				// FIX -- END
-			
+
 			});
-			
+
 		},
 		injectIntoPage: function(locationToLoad,contentToLoad){
 
@@ -175,16 +205,16 @@ var curriculumDataObject = curriculumDataObject || {};
 				return newDomInitial;
 			},
 			buildGoogleCode: function(title,areaObjectName,mainObjectCategory,mainObjectPageType) {
-			
+
 				return `onclick=" if(ga !== '' ) { ga('send', 'event', 'click - ${mainObjectCategory} - ${mainObjectPageType}', '${areaObjectName} Clicked', '${title}', 5, true); } "`;
-			
+
 			},
 			pageFrame: {
 				 // this is the framework of the page, these are all the classes for the divs
 
 
 				initialize: function(mainObject) {
-					 
+
 					var blocksObject = mainObject.blocks,
 						pageFrame = this,
 						returnData = "";
@@ -252,18 +282,18 @@ var curriculumDataObject = curriculumDataObject || {};
 						blockObject = mainObject.blocks,
 						titleInfo = titleBannerObject.data.pages[mainObject.category],
 						newPageContent = `<div class='titleHolder ${mainObject.category}'>`;
-									
-						
+
+
 					if(titleInfo.imgSrc){
 						newPageContent += `<img src="${mainObject.resourceLocation}${titleInfo.imgSrc}" /> `
 					} else {
 						newPageContent += `<h2>${titleInfo.title}</h2>
 											<h4>${titleInfo.subTitle}</h4>`;
-									
+
 					}
-					
+
 					newPageContent += `</div>`;
-					
+
 					newPageContent = blockObject.makePageDomNew(newPageContent);
 					mainObject.grabLocationDom(titleBannerObject.location).appendChild(newPageContent);
 				},
@@ -301,7 +331,7 @@ var curriculumDataObject = curriculumDataObject || {};
 										<a href="">
 											<div class="content"></div>
 										</a>
-									</div>									
+									</div>
 								</div>
 								<div class='buttons'>
 									<div class="button"></div>
@@ -317,67 +347,67 @@ var curriculumDataObject = curriculumDataObject || {};
 						newPageContent = `<div id="myCarousel" class="carousel slide" data-ride="carousel">
 								  <!-- Indicators -->
 								  <ol class="carousel-indicators">`;
-					
+
 						var carouselIndicators = ``,
 							carouselContent = ``,
 							slides = carouselObject.data.pages[mainObject.category].slides;
-						
+
 						slides.forEach(function(slide, index) {
 							carouselIndicators += `<li data-target="#myCarousel" data-slide-to="${index}" `;
-							
+
 							if(index === 0 ) {
 								carouselIndicators += ` class="active"`;
 							}
-								
+
 							carouselIndicators += `></li>`;
-							
+
 							carouselContent += `<div class="item`;
-							
+
 							if(index === 0 ) {
 								carouselContent += ` active`;
 							}
-							 
-							
-							
+
+
+
 							carouselContent +=`">
 									  <a target="_blank" class="submittedResource ${slide.type}" href="${slide.link}"  ${blockObject.buildGoogleCode(slide.title,carouselObject.name,mainObject.category,mainObject.pageType)}>`;
-							
+
 							var imgSrc ="";
 							if(slide.imgSrc !== "") {
 								imgSrc = slide.imgSrc;
 							}
 							if(imgSrc.indexOf("//") !== -1){
-								
-								
-								
+
+
+
 							} else {
-							
-								imgSrc = mainObject.resourceLocation + imgSrc;		 
-								
+
+								imgSrc = mainObject.resourceLocation + imgSrc;
+
 							}
-							
+
 							carouselContent += `<div class="content"><img src="${imgSrc}"/></div>
 											<div class="title">
 												<h3>${slide.title}</h3>
 											</div>
 										</a>
 									</div>`;
-							
+
 						})
-						
+
 						newPageContent += `${carouselIndicators}
 											</ol>
 
 								  <!-- Wrapper for slides -->
 								  <div class="carousel-inner">
-									${carouselContent}			
+									${carouselContent}
 								  </div>
-								
-								   
+
+
 								</div>`;
-					
+
 					newPageContent = blockObject.makePageDomNew(newPageContent);
-					 
+
 					mainObject.grabLocationDom(carouselObject.location).appendChild(newPageContent);
 				},
 				data:{}
@@ -394,11 +424,11 @@ var curriculumDataObject = curriculumDataObject || {};
 								</div>
 								<div class='list'>
 									<ul>`;
-					
+
 						var features = featuredObject.data.pages[mainObject.category].features;
 					// build list items
 						features.forEach(function(feature,index) {
-							var imgSrc = "img/categoryPage/comingSoon.png"; 
+							var imgSrc = "img/categoryPage/comingSoon.png";
 							newPageContent += `<li class="resourceItem">
 											<a target="_blank" class='submittedResource ${feature.type}' href='${feature.link}'  ${blockObject.buildGoogleCode(feature.title,featuredObject.name,mainObject.category,mainObject.pageType)}>
 												<div class="thumbnailImage">`;
@@ -406,33 +436,33 @@ var curriculumDataObject = curriculumDataObject || {};
 								imgSrc = feature.imgSrc;
 							}
 							if(imgSrc.indexOf("//") !== -1){
-								
-								
-								
+
+
+
 							} else {
-							
-								imgSrc = mainObject.resourceLocation + imgSrc;		 
-								
+
+								imgSrc = mainObject.resourceLocation + imgSrc;
+
 							}
 							newPageContent += `<img src="${imgSrc}" /></div>
 												<p class="description">${feature.title}</p>
 											</a>
 										</li>`;
-							
-							
+
+
 						})
-										
+
 						newPageContent +=`</ul>
 								</div>`;
-					
-							
+
+
 						//build suggestion box NOTE - this should be it's own block, but for ease of first time creation, I'm putting it here.
-					
+
 						var suggestion = featuredObject.data.pages[mainObject.category].suggestion;
-					
+
 						newPageContent +=`<div class="suggestion">
 									<ul class='nav nav-tabs'>
-										 
+
 										<li class="dropdown ">
 											<a class="dropdown-toggle" data-toggle="dropdown" href="#">${suggestion.header}
 											<span class="caret"></span></a>
@@ -441,26 +471,26 @@ var curriculumDataObject = curriculumDataObject || {};
 												<span class="title">${suggestion.title} </span>
 												<span class="description">${suggestion.message}</span>
 											  </li>`;
-						
+
 						var randomEmail = suggestion.emails[Math.floor(Math.random()*(suggestion.emails.length))];
-					
-					
+
+
 						newPageContent +=`<li><a href="mailto:${randomEmail.email}?cc=skuehn@teksystems.com&subject=APPademics Submission Request&body=Hello,%0A %0A Web address or attachment: %0A %0A Why is this important: %0A %0A What is the target category:%0A %0A %0A %0A"   ${blockObject.buildGoogleCode(randomEmail.name +" Recipeient","Content Curator Email ",mainObject.category,mainObject.pageType)}>${randomEmail.name}</a></li>`;
-							
-						 
-											  
-											 
+
+
+
+
 
 						newPageContent +=`</ul>
 										</li>
-										
+
 									</ul>
 								</div>
 
 							</div>`;
-					
-					newPageContent = blockObject.makePageDomNew(newPageContent); 
-					
+
+					newPageContent = blockObject.makePageDomNew(newPageContent);
+
 					mainObject.grabLocationDom(featuredObject.location).appendChild(newPageContent);
 					// this will add in the suggestion block
 					//blockObject.suggestion.initialize(mainObject);
@@ -470,15 +500,15 @@ var curriculumDataObject = curriculumDataObject || {};
 			suggestion: {
 				location: "",
 				initialize: function(mainObject) {
-					
+
 					var suggestionObject = this,
 						mainObject = mainObject,
 						blockObject = mainObject.blocks,
 						suggestionData = mainObject.blocks.featured.data.pages[mainObject.category].suggestion;
-					
+
 						var newPageContent =`<div class="suggestion">
 									<ul class='nav nav-tabs'>
-										 
+
 										<li class="dropdown ">
 											<a class="dropdown-toggle" data-toggle="dropdown" href="#">${suggestion.header}
 											<span class="caret"></span></a>
@@ -487,22 +517,22 @@ var curriculumDataObject = curriculumDataObject || {};
 												<span class="title">${suggestion.title} </span>
 												<span class="description">${suggestion.message}</span>
 											  </li>`;
-						
+
 						var randomEmail = suggestion.emails[Math.floor(Math.random()*(suggestionEmails.length))];
-					
-					
+
+
 						newPageContent +=`<li><a href="mailto:${randomEmail.email}?cc=skuehn@teksystems.com" ${blockObject.buildGoogleCode(randomEmail.name +" Recipeient","Content Curator Email ",mainObject.category,mainObject.pageType)}>${randomEmail.name}</a></li>`;
-							
-						 
-											  
-											 
+
+
+
+
 
 						newPageContent +=`</ul>
 										</li>
-										
+
 									</ul>
 								</div>`;
-					
+
 						mainObject.grabLocationDom(featuredObject.location).appendChild(newPageContent);
 				}
 			},
@@ -519,45 +549,45 @@ var curriculumDataObject = curriculumDataObject || {};
 								<div class='title'>
 									<h3>${browseData.title}</h3>
 								</div>`;
-					
+
 						browseData.categories.forEach(function(category, index) {
-							
+
 							menuContent += `<li class="${category.shortName}`
-							
+
 							if(index === 0 ) {
 								menuContent += ` active`;
-							}	
-							
+							}
+
 							menuContent += `">`;
 							if(category.subCategories) { // build submenu, NOTE current there should be no subcategories, there is not good layout for it in the browse area
-							
+
 								category.subCategories.forEach(function(subCategory, index2){
-									
+
 									menuContent +=`<li class='dropdown ${category.shortName}`;
-									
+
 									if(index === 0 ) {
 										menuContent += ` active`;
 									}
-									
+
 									menuContent +=`'>
 												<a class='dropdown-toggle' data-toggle='dropdown' href='#'>${category.title}
 												<span class='caret'></span></a>
 												<ul class='dropdown-menu'>
 												  <li class='${subCategory.shortName}'><a href='#'>${subCategory.title} </a></li>
 												  <li class='${subCategory.shortName}'><a href='#'>${subCategory.title} </a></li>
-												  <li class='${subCategory.shortName}'><a href='#'>${subCategory.title} </a></li> 
+												  <li class='${subCategory.shortName}'><a href='#'>${subCategory.title} </a></li>
 												</ul>`
-									
+
 								});
-								
-								
+
+
 							} else {// no submenu
-								
+
 								menuContent += `<a>${category.title}</a>`;
-								
+
 							}
 							menuContent += `</li>`;
-							
+
 							// NOTE no support for subcategories
 							browseContent += `<div class='category ${category.shortName}'>
 										<h4>${category.title}</h4>
@@ -579,7 +609,7 @@ var curriculumDataObject = curriculumDataObject || {};
 
 									} else {
 
-										imgSrc = mainObject.resourceLocation + imgSrc;		 
+										imgSrc = mainObject.resourceLocation + imgSrc;
 
 									}
 
@@ -590,12 +620,12 @@ var curriculumDataObject = curriculumDataObject || {};
 												</div>`
 								})
 							}
-											
+
 							browseContent += `			</div>
 									</div>`;
-							
+
 						})
-							
+
 									/* <li class="active">
 											<a href=''>Anatomy of an Application</a>
 										</li>
@@ -606,7 +636,7 @@ var curriculumDataObject = curriculumDataObject || {};
 											<ul class="dropdown-menu">
 											  <li><a href="#">Sub Topic </a></li>
 											  <li><a href="#">Sub Topic </a></li>
-											  <li><a href="#">Sub Topic </a></li> 
+											  <li><a href="#">Sub Topic </a></li>
 											</ul>
 										</li> -->
 										<li><a href="#">Life cycle of an Application</a></li>
@@ -624,7 +654,7 @@ var curriculumDataObject = curriculumDataObject || {};
 
 											  <li><a href="#">Sub Topic </a></li>
 											  <li><a href="#">Sub Topic </a></li>
-											  <li><a href="#">Sub Topic </a></li> 
+											  <li><a href="#">Sub Topic </a></li>
 											</ul>
 										</li> -->
 										<li><a href="#">Customer Impact</a></li>
@@ -635,11 +665,11 @@ var curriculumDataObject = curriculumDataObject || {};
 											<ul class="dropdown-menu">
 											  <li><a href="#">Sub Topic </a></li>
 											  <li><a href="#">Sub Topic </a></li>
-											  <li><a href="#">Sub Topic </a></li> 
+											  <li><a href="#">Sub Topic </a></li>
 											</ul>
 										</li> -->
 										<li><a href="#">How to Message</a></li> */
-							
+
 						newPageContent +=`<div class='menu'>
 									<ul class='nav nav-tabs'>
 										${menuContent}
@@ -648,16 +678,16 @@ var curriculumDataObject = curriculumDataObject || {};
 								<div class='categoriesHolder'>
 										${browseContent}
 								</div>
-								
+
 
 							</div>`;
-					
+
 					newPageContent = blockObject.makePageDomNew(newPageContent);
-					
+
 					 mainObject.grabLocationDom(browseContentObject.location).appendChild(newPageContent);
 				},
 				data:{}
-			},			
+			},
 			intro: {
 				location: ".intro",
 				initialize: function(mainObject) {
@@ -802,7 +832,7 @@ var curriculumDataObject = curriculumDataObject || {};
 									pageContent += blockObject.processSubModules(module.subModules, blockObject, audience);
 
 									pageContent += `</div>`;
-									
+
 									if(module.additionalModules) {
 										module.additionalModules.forEach(function(additionalMod) {
 
@@ -891,15 +921,15 @@ var curriculumDataObject = curriculumDataObject || {};
 											if(additionalModule.singleContent) {
 												console.log("here singleContent");
 												var singleContent = additionalModule.singleContent;
-												
+
 												pageContent += `<div class='resourcesHolder' >`;
-												
+
 												if(singleContent.resources) {
-													
+
 													pageContent += `<ul class='resourcesList doubleColumn'>`;
-													
+
 													singleContent.resources.forEach(function(resource) {
-														
+
 														var audience = "";
 														if(singleContent.resources.audience) {
 															audience = singleContent.resources.audience;
@@ -911,15 +941,15 @@ var curriculumDataObject = curriculumDataObject || {};
 														};
 
 															pageContent += blockObject.resourceCreator(passedResources);
-													
-														
+
+
 													})
-													
+
 												}
-												
+
 												pageContent += `</div>`;
-												
-												 
+
+
 											}
 
 											pageContent +=`<div class='clear'></div></div></div></div>`;
@@ -954,11 +984,11 @@ var curriculumDataObject = curriculumDataObject || {};
 
 										if(!arrayOfAlpha[title.charAt(0)]) {
 											arrayOfAlpha[title.charAt(0)] = title;
-											
+
 											if(index !== 0) {
 												pageContent += ` - `;
 											} else {
-				
+
 											}
 											pageContent += `<span rel='${title.replace(/ /g,'_').replace(/&amp;/g,"_")}'>${title.charAt(0)}</span>`;
 
@@ -1011,7 +1041,7 @@ var curriculumDataObject = curriculumDataObject || {};
 
 					pageContent += `<div class='clear'></div></div><div class='clear'></div>`;
 
-					
+
 					mainObject.injectIntoPage(mainObject.grabLocationDom(mainContentObject.location), pageContent);
 				},
 				data: {}
@@ -1490,7 +1520,7 @@ var curriculumDataObject = curriculumDataObject || {};
 			}
 		},
 		activatePage: function() {
-			// NOTE -- all parts of this that address specific areas of the page or "blocks" should be broken up and added as an additional function that is called by each blocks initialize function, so that the functionallity for a block is tied to that block. 
+			// NOTE -- all parts of this that address specific areas of the page or "blocks" should be broken up and added as an additional function that is called by each blocks initialize function, so that the functionallity for a block is tied to that block.
 			var mainObject = this;
 			var pageCurriculum = document.querySelector(".curriculum"),
 				isThisDevelopment = false;
@@ -1658,23 +1688,23 @@ var curriculumDataObject = curriculumDataObject || {};
 					theme:"dark-2"
 				});
 			}
-			 
-			
+
+
 			//NOTE -- research further: this works on the categories page and for some reason doesn't work on the curriculumpage. The styling in the right column is causing some kind of conflict so the scrolling does nto work correctly in chrome or IE.  This is the preferred and simpler method of adding scrollbars
 			function addSimpleScrollbars(target) {
 				if(document.querySelectorAll(target)){
 					var targets = document.querySelectorAll(target);
-						
+
 					targets = mainObject.convertToArray(targets);
-					
+
 					targets.forEach(function(targetItem){
 						new SimpleBar(targetItem,{autoHide:false});
 					});
-						
+
 				}
 			}
 			console.log(mainObject.pageType);
-			
+
 			var areasToAddScrolling = {
 				curriculumPage:{
 					functionToUse: addScrollBars,
@@ -1687,10 +1717,10 @@ var curriculumDataObject = curriculumDataObject || {};
 				}
 			}
 			 areasToAddScrolling[mainObject.pageType].areas.forEach(areasToAddScrolling[mainObject.pageType].functionToUse);
-			
-			// this specifically adds functionality to the browse categories section of the category type page		
+
+			// this specifically adds functionality to the browse categories section of the category type page
 			if(document.querySelectorAll(".browseContent")[0]){
-			
+
 				var browseContent = document.querySelectorAll(".browseContent")[0],
 					browseButtons = browseContent.querySelectorAll(".nav.nav-tabs li a"),
 					categories = browseContent.querySelectorAll(".categoriesHolder .category");
@@ -1719,7 +1749,7 @@ var curriculumDataObject = curriculumDataObject || {};
 					})
 				})
 			}
-			
+
 			// NOTE -- this targets all submitted resources on the category type pages
 			var submittedResources = document.querySelectorAll(".submittedResource");
 			if(submittedResources[0]){
@@ -1727,7 +1757,7 @@ var curriculumDataObject = curriculumDataObject || {};
 				targets.forEach(function(target) {
 					 if(target.classList.contains("infographic") ){
 						if(target.href.indexOf(".jpg") === -1 && target.href.indexOf(".gif") === -1 && target.href.indexOf(".png") === -1  ) {
-							
+
 						} else {
 							var src = target.href;
 						 target.addEventListener("click",function(e){
@@ -1737,43 +1767,43 @@ var curriculumDataObject = curriculumDataObject || {};
 win.document.body.innerHTML = `<img src="${src}"/>`;
 						 })
 						}
-						 
+
 					 }
-					
+
 				})
 			}
 
 			// This adds a navigator into the teksystems FSG Page that will scroll to the corresponding alphabetical area of the modules listed below.
-			
-			//mainObject.scrollToElement 
-			
+
+			//mainObject.scrollToElement
+
 			var alphabeticalSelection = document.querySelectorAll(".module.alphabeticalSelection");
 			console.log("here alphaBlock");
 			if(alphabeticalSelection[0]) {
-				
-				let alphaBlocks = mainObject.convertToArray(alphabeticalSelection); 
-				
+
+				let alphaBlocks = mainObject.convertToArray(alphabeticalSelection);
+
 				alphaBlocks.forEach(function(alphaBlock) {
-					
+
 					//console.log(alphaBlock.parentElement);
-					selectionElements = mainObject.convertToArray(alphaBlock.querySelectorAll('span')); 
-					
+					selectionElements = mainObject.convertToArray(alphaBlock.querySelectorAll('span'));
+
 					selectionElements.forEach(function(element) {
-						
+
 						element.addEventListener("click", function(e) {
 							console.log("here");
 							e.stopPropagation();
-							mainObject.scrollToElement(alphaBlock.parentElement.querySelector("."+element.getAttribute('rel'))); 
+							mainObject.scrollToElement(alphaBlock.parentElement.querySelector("."+element.getAttribute('rel')));
 						})
-						
+
 					})
-					
-					
+
+
 				})
-				
-				//mainObject.convertToArray(alphabeticalSelection[0].querySelectorAll('span')); 
-//				
-//				
+
+				//mainObject.convertToArray(alphabeticalSelection[0].querySelectorAll('span'));
+//
+//
 //					targets.forEach(function(target) {
 //
 //						target.addEventListener("click",function(e){
@@ -1785,9 +1815,9 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 //						});
 //
 //					})
-				
+
 			}
-			
+
 
 			/*if(document.querySelector(".featuredList .list")){
 				new SimpleBar(document.querySelector(".featuredList .list"),{autoHide:false});
@@ -1973,9 +2003,9 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 
 
 		},
-		
+
 		convertToArray: function (submittedDomObject) {
-			// this function is useful when dealing with a querySelectAll and the dom elements need to be converted into an array from their standard form because IE does not like them. . . 	
+			// this function is useful when dealing with a querySelectAll and the dom elements need to be converted into an array from their standard form because IE does not like them. . .
 			var newArray = [];
 				for (i = 0; i < submittedDomObject.length; i++) {
 					newArray[i] = submittedDomObject[i];
@@ -2021,26 +2051,26 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 		getCategory: function(mainObject){
 
 			//FIX - consider adding in a what opco is this so that it can have an opco and cateogry functionality to control how the page gets created.
-			
-			
-			
+
+
+
 			var category = "",
 				receivedHash = (document.location.hash).replace("#", "");
 			console.log(receivedHash);
 			// FIX this is here because it will eventually replace the entire getCategory function
 			if(receivedHash.indexOf("/") !== -1) {
-				console.log("/ found");				
+				console.log("/ found");
 				receivedHashArray = receivedHash.split('/');
-				
+
 				mainObject.newAddress = true;
-				
+
 				mainObject.addressBar.runAddressBar(mainObject);
-				
+
 				//FIX this will be removed later, just putting it here so everything continues to work
 				category = mainObject.category;
-				
+
 				return category;
-				
+
 			} else if(receivedHash === "corporateCareerDevelopment") {
 				//FIX this needs to be fixed throughout the css so that instead of careerDevelopment corporateCareerDevelopment can be used
 				category = "careerDevelopment";
@@ -2061,7 +2091,7 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 				category = "learningJourney";
 			}
 			mainObject.processDefaults(mainObject);
-			
+
 			return category;
 		},
 		processDefaults: function(mainObjectHere) {
@@ -2087,11 +2117,11 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 				}
 			}
 		},
-		processDefaultsNew: function(mainObjectHere, passedFunction) {  
+		processDefaultsNew: function(mainObjectHere, passedFunction) {
 			var mainObject = mainObjectHere;
 			console.log(mainObject);
 			console.log(mainObject.resourceLocation);
-			
+
 			mainObject.loadExternalFileProm(mainObject.resourceLocation + "js/data/" + mainObject.opcoName + "/" + mainObject.pageType + ".js", "js", function() {
 
 				console.log("here new data");
@@ -2275,23 +2305,23 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 
 						}
 					 } else {
-						 
+
 						 function loadNext(n) {
-							 
+
 							 var next = resourcesToGet[n],
 							 dataFileToLoad = "";
-							 
+
 							if (next) {
-								
+
 								if (next.indexOf("//") === -1) {
-									
+
 									dataFileToLoad = mainObject.resourceLocation + next;
-									
+
 								} else {
-									
+
 									dataFileToLoad = next;
 								}
-								
+
 								return mainObject.loadExternalFileProm(dataFileToLoad,typeOfResources).then(() => loadNext(n + 1));
 						  	}
 						  	return;
@@ -2388,25 +2418,25 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 		loadExternalFileProm: function loadExternalFileProm(filename, filetype, callBack) {
 			console.log("here promise");
 			var mainObject = this;
-			
+
 			//FIX!! What should happen if the requested resource doesn't load??
 			if(typeof Promise === "undefined") {
 				console.log("here before runPromise")
 				mainObject.loadExternalFile(mainObject.resourceLocation + mainObject.promiseScript, "js", "", function () {
-					
+
 					 return mainObject.loadExternalFileProm(filename, filetype, callBack);
 				});
-				
-				 
-				
+
+
+
 			} else {
 				if(!callBack) {
 					callBack = function(){};
 				}
 				return runPromise().then(function(){ callBack(); return Promise.resolve();});
-								
+
 			}
-			
+
 			function runPromise() {
 				var scriptPromise = new Promise(function (resolve, reject) {
 					console.log("here inside runPromise")
@@ -2484,7 +2514,7 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 				var processVar;
 
 	 			for(processVar in passedThis.routes) {
-					
+
 					var k = processVar,
 						v = passedThis.routes[processVar];
 
@@ -2540,10 +2570,10 @@ win.document.body.innerHTML = `<img src="${src}"/>`;
 
 			},
 			runAddressBar: function(passedThis) {
-				
+
 				var that = passedThis,
 					addressThis = this;
-				
+
 				that.currenthashValue = window.location.hash;
 				that.currentHostname= window.location.hostname;
 
